@@ -6,28 +6,30 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
-{
-    Schema::create('maintenance_logs', function (Blueprint $table) {
-        $table->id();
-        $table->morphs('maintainable'); // This allows logs for both Lorries AND Assets (Flexible!)
-        $table->date('tarikh');
-        $table->string('jenis_maintenance'); // Servis, Tayar, etc.
-        $table->decimal('kos_rm', 12, 2);
-        $table->string('vendor');
-        $table->string('resit_upload')->nullable();
-        $table->integer('odometer_masa_servis')->nullable(); // For lorries
-        $table->string('status')->default('Siap'); // Siap, Dalam Proses
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('maintenance_logs', function (Blueprint $table) {
+            $table->id();
+            
+            // Relationship to Lorry
+            $table->foreignId('lorry_id')->constrained()->onDelete('cascade');
+            
+            // Audit Trail: Who created/edited this?
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
 
-    /**
-     * Reverse the migrations.
-     */
+            // Maintenance Details
+            $table->date('tarikh');
+            $table->enum('jenis_maintenance', ['Servis', 'Tayar', 'Bateri', 'Repair', 'Lain-lain']);
+            $table->decimal('kos_rm', 12, 2);
+            $table->string('vendor');
+            $table->string('resit_upload')->nullable(); // Path to the file
+            $table->integer('odometer_masa_servis');
+            
+            $table->timestamps();
+        });
+    }
+
     public function down(): void
     {
         Schema::dropIfExists('maintenance_logs');

@@ -10,6 +10,7 @@ use App\Http\Controllers\MaintenanceLogController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AssetMaintenanceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BudgetRequestController;
 
 Route::post('/maintenance-logs', [MaintenanceLogController::class, 'store'])->name('maintenance.store');
 
@@ -40,5 +41,17 @@ Route::middleware('auth')->group(function () {
     Route::put('/maintenance/record/{id}', [AssetMaintenanceController::class, 'updateRecord'])->name('assets.update_record');
     Route::delete('/maintenance/record/{id}', [AssetMaintenanceController::class, 'destroyRecord'])->name('assets.destroy_record');
 });
+
+    Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/budgets', [BudgetRequestController::class, 'index'])->name('admin.budgets.index');
+    Route::post('/admin/budgets/approve/{id}', [BudgetRequestController::class, 'approve'])->name('admin.budgets.approve');
+    Route::post('/admin/budgets/reject/{id}', [BudgetRequestController::class, 'reject'])->name('admin.budgets.reject');
+    Route::patch('/admin/budgets/update-base/{user}', [BudgetRequestController::class, 'updateBase'])
+    ->name('admin.budgets.updateBase');
+    Route::get('/my-budget-requests', [BudgetRequestController::class, 'myRequests'])->name('supervisor.budgets.index');
+});
+
+// For Supervisor
+Route::post('/budget-request', [BudgetRequestController::class, 'store'])->name('budget.request.store');
 
 require __DIR__.'/auth.php';

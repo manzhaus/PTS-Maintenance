@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Asset;
 use App\Models\AssetMaintenance;
+use App\Models\Lorry;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -11,68 +12,48 @@ class AssetSeeder extends Seeder
 {
     public function run(): void
     {
-        // REMOVE THE $this->call(...) lines from here! 
-        // They belong in DatabaseSeeder.php
+        $admin = User::where('role', 'admin')->first();
+        $sv = User::where('role', 'supervisor')->first();
+
+        // --- ASSETS (The 3 PTS Stations) ---
         
-        // Get the first user (Admin/SV) to act as the creator
-        $user = User::first();
-
-        if (!$user) {
-            $this->command->info('No user found. Please run UserSeeder first!');
-            return;
-        }
-
-        // 1. WEIGHBRIDGE
-        $wb = Asset::create([
-            'name' => 'Weighbridge Main Gate S1',
+        $pts1 = Asset::create([
+            'name' => 'Weighbridge PTS Shah Alam',
             'category' => 'Weighbridge',
             'pts_lokasi' => 'Shah Alam',
-            'metadata' => [
-                'tarikh_servis_terakhir' => '2026-01-10',
-                'tarikh_kalibrasi_seterusnya' => '2026-07-10'
-            ]
+            'metadata' => ['tarikh_kalibrasi_seterusnya' => '2026-10-01']
+        ]);
+
+        $pts2 = Asset::create([
+            'name' => 'Weighbridge PTS Klang',
+            'category' => 'Weighbridge',
+            'pts_lokasi' => 'Klang',
+            'metadata' => ['tarikh_kalibrasi_seterusnya' => '2026-08-15']
+        ]);
+
+        $pts3 = Asset::create([
+            'name' => 'Weighbridge PTS Subang',
+            'category' => 'Weighbridge',
+            'pts_lokasi' => 'Subang',
+            'metadata' => ['tarikh_kalibrasi_seterusnya' => '2026-12-20']
         ]);
 
         AssetMaintenance::create([
-            'asset_id' => $wb->id,
-            'jenis_kerja' => 'Kalibrasi Sensor',
-            'kos_rm' => 1250.00,
-            'tarikh' => '2026-04-05',
+            'asset_id' => $pts1->id,
+            'jenis_kerja' => 'Kalibrasi Berjadual',
+            'kos_rm' => 1500.00,
+            'tarikh' => '2026-04-01',
             'status' => 'Siap',
-            'created_by' => $user->id
-        ]);
-
-        // 2. GENSET
-        $genset = Asset::create([
-            'name' => 'Genset Perkins 50kVA',
-            'category' => 'Genset',
-            'pts_lokasi' => 'Shah Alam',
-            'metadata' => ['brand' => 'Perkins', 'power' => '50kVA']
+            'created_by' => $admin->id
         ]);
 
         AssetMaintenance::create([
-            'asset_id' => $genset->id,
-            'jenis_kerja' => 'Tukar Minyak Hitam & Filter',
-            'kos_rm' => 450.00,
-            'tarikh' => '2026-04-12',
+            'asset_id' => $pts2->id,
+            'jenis_kerja' => 'Repair Load Cell',
+            'kos_rm' => 850.00,
+            'tarikh' => '2026-04-10',
             'status' => 'Siap',
-            'created_by' => $user->id
-        ]);
-
-        // 3. FACILITY/BUILDING
-        $building = Asset::create([
-            'name' => 'Gudang Utama A',
-            'category' => 'Bangunan',
-            'pts_lokasi' => 'Shah Alam'
-        ]);
-
-        AssetMaintenance::create([
-            'asset_id' => $building->id,
-            'jenis_kerja' => 'Repair Bumbung Bocor',
-            'kos_rm' => 3200.00,
-            'tarikh' => '2026-04-20',
-            'status' => 'Dalam Proses',
-            'created_by' => $user->id
+            'created_by' => $sv->id
         ]);
     }
 }

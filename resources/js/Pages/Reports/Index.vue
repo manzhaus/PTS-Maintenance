@@ -109,7 +109,7 @@ const reset = () => {
                             <th style="padding: 15px;">PTS</th>
                             <th style="padding: 15px;">Bulan/Tahun</th>
                             <th style="padding: 15px;">Total Kos</th>
-                            <th style="padding: 15px;">Supervisor</th>
+                            <th style="padding: 15px;">Updated By</th>
                         </tr>
                     </thead>
                     <tbody>

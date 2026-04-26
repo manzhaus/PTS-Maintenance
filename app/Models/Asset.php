@@ -30,7 +30,7 @@ class Asset extends Model
      */
     public function maintenances(): HasMany
     {
-        return $this->hasMany(AssetMaintenance::class);
+        return $this->hasMany(AssetMaintenance::class, 'asset_id');
     }
 
     /**

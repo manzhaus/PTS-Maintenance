@@ -110,7 +110,7 @@ class LorrySeeder extends Seeder
             'lorry_id' => $lorry4->id,
             'created_by' => $sv->id,
             'tarikh' => '2026-04-22',
-            'jenis_maintenance' => 'Lain-lain',
+            'jenis_maintenance' => 'Servis',
             'kos_rm' => 800.00,
             'vendor' => 'Hino Authorized Service Center',
             'odometer_masa_servis' => 209500,

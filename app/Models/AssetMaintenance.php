@@ -23,10 +23,10 @@ class AssetMaintenance extends Model
     /**
      * Get the asset that owns the maintenance record.
      */
-    public function asset(): BelongsTo
-    {
-        return $this->belongsTo(Asset::class);
-    }
+    public function asset()
+{
+    return $this->belongsTo(Asset::class, 'asset_id');
+}
 
     /**
      * Get the user (Supervisor/Admin) who created the record.

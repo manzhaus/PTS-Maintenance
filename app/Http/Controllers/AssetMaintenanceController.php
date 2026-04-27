@@ -109,7 +109,7 @@ class AssetMaintenanceController extends Controller
             'kos_rm' => 'required|numeric',
             'tarikh' => 'required|date',
             'status' => 'required|in:Siap,Dalam Proses',
-            'resit' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+            'resit' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ]);
 
         $path = $request->hasFile('resit') ? $request->file('resit')->store('receipts', 'public') : null;

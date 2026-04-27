@@ -86,7 +86,7 @@ class BudgetRequestController extends Controller
         $request->validate([
             'jumlah_dipohon' => 'required|numeric|min:1',
             'sebab' => 'required|string|max:500',
-            'lampiran' => 'nullable|file|mimes:pdf,jpg,png|max:2048'
+            'lampiran' => 'nullable|file|mimes:pdf,jpg,png|max:5120'
         ]);
 
         $path = $request->file('lampiran') ? $request->file('lampiran')->store('quotations', 'public') : null;

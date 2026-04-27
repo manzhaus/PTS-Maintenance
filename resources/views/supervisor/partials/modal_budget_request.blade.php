@@ -38,7 +38,7 @@
                             <input type="file" name="lampiran" class="custom-file-input" id="customFile" accept=".pdf,.jpg,.png,.jpeg">
                             <label class="custom-file-label" for="customFile">Pilih fail...</label>
                         </div>
-                        <small class="text-muted italic">Format: PDF, JPG, PNG (Max: 2MB)</small>
+                        <small class="text-muted italic">Format: PDF, JPG, PNG (Max: 5MB)</small>
                     </div>
                 </div>
 

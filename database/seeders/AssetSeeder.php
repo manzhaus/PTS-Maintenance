@@ -12,8 +12,8 @@ class AssetSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::where('role', 'admin')->first();
-        $sv = User::where('role', 'supervisor')->first();
+        $adminId = User::where('role', 'admin')->value('id') ?? 1;
+        $svId = User::where('role', 'supervisor')->value('id') ?? 2;
 
         // --- ASSETS (The 3 PTS Stations) ---
         
@@ -42,7 +42,7 @@ class AssetSeeder extends Seeder
             'kos_rm' => 1500.00,
             'tarikh' => '2026-04-24',
             'status' => 'Siap',
-            'created_by' => $admin->id
+            'created_by' => $adminId
         ]);
 
         AssetMaintenance::create([
@@ -51,7 +51,7 @@ class AssetSeeder extends Seeder
             'kos_rm' => 850.00,
             'tarikh' => '2026-04-25',
             'status' => 'Siap',
-            'created_by' => $sv->id
+            'created_by' => $svId
         ]);
     }
 }

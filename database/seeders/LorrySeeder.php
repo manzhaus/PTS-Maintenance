@@ -15,8 +15,8 @@ class LorrySeeder extends Seeder
     public function run(): void
     {
         // 1. Fetch the users
-        $admin = User::where('role', 'admin')->first();
-        $sv = User::where('role', 'supervisor')->first();
+        $adminId = User::where('role', 'admin')->value('id') ?? 1;
+        $svId = User::where('role', 'supervisor')->value('id') ?? 2;
 
         if (!$admin || !$sv) {
             $this->command->error('Users not found. Run DatabaseSeeder first!');

@@ -1,6 +1,7 @@
 @extends('layouts.dashboard_layout')
 
 @section('content')
+
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="h4 font-weight-bold">HQ Admin Dashboard: <span class="text-primary">Global Overview</span></h2>

@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useForm, router, Head } from '@inertiajs/vue3';
+// Import layout untuk paparkan navbar
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({
     assets: Array,
@@ -87,180 +89,189 @@ const filterByCategory = (cat) => {
 <template>
     <Head title="Asset Maintenance" />
 
-    <div class="dashboard-container">
-        <header class="main-header">
-            <div>
-                <h1>Penyelenggaraan Aset</h1>
-                <p>Urus pelbagai kategori aset dalam satu paparan berpusat.</p>
-            </div>
-            <button @click="showModal = true" class="btn-primary">+ Urus Aset / Rekod</button>
-        </header>
+    <AuthenticatedLayout>
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Urus Aset & Penyelenggaraan
+            </h2>
+        </template>
 
-        <nav class="filter-nav">
-            <span class="filter-label">Tapis:</span>
-            <div class="filter-pills">
-                <button @click="filterByCategory('All')" :class="['pill', { active: currentCategory === 'All' }]">Semua</button>
-                <button v-for="cat in availableCategories" :key="cat" @click="filterByCategory(cat)" :class="['pill', { active: currentCategory === cat }]">{{ cat }}</button>
-            </div>
-        </nav>
+        <div class="dashboard-container">
+            <header class="main-header">
+                <div>
+                    <h1>Penyelenggaraan Aset</h1>
+                    <p>Urus pelbagai kategori aset dalam satu paparan berpusat.</p>
+                </div>
+                <button @click="showModal = true" class="btn-primary">+ Log Maintenance / Asset Baru</button>
+            </header>
 
-        <div class="asset-grid">
-            <div v-for="asset in assets" :key="asset.id" class="asset-card">
-                <div class="card-header">
-                    <div class="asset-info">
-                        <span class="category-tag">{{ asset.category }}</span>
-                        <h3>{{ asset.name }}</h3>
-                        <small v-if="asset.maintenances.length > 0" class="last-service">
-                            Servis Terakhir: {{ asset.maintenances[0].tarikh }}
-                        </small>
-                    </div>
-                    
-                    <div v-if="asset.category === 'Weighbridge'" class="metadata-display">
-                        <div class="meta-item">
-                            <small>Kalibrasi Seterusnya:</small>
-                            <span :class="{'text-danger': true}">{{ asset.metadata?.tarikh_kalibrasi_seterusnya || 'N/A' }}</span>
+            <nav class="filter-nav">
+                <span class="filter-label">Tapis:</span>
+                <div class="filter-pills">
+                    <button @click="filterByCategory('All')" :class="['pill', { active: currentCategory === 'All' }]">Semua</button>
+                    <button v-for="cat in availableCategories" :key="cat" @click="filterByCategory(cat)" :class="['pill', { active: currentCategory === cat }]">{{ cat }}</button>
+                </div>
+            </nav>
+
+            <div class="asset-grid">
+                <div v-for="asset in assets" :key="asset.id" class="asset-card">
+                    <div class="card-header">
+                        <div class="asset-info">
+                            <span class="category-tag">{{ asset.category }}</span>
+                            <h3>{{ asset.name }}</h3>
+                            <small v-if="asset.maintenances.length > 0" class="last-service">
+                                Servis Terakhir: {{ asset.maintenances[0].tarikh }}
+                            </small>
+                        </div>
+                        
+                        <div v-if="asset.category === 'Weighbridge'" class="metadata-display">
+                            <div class="meta-item">
+                                <small>Kalibrasi Seterusnya:</small>
+                                <span :class="{'text-danger': true}">{{ asset.metadata?.tarikh_kalibrasi_seterusnya || 'N/A' }}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="table-wrapper">
-                    <table class="grid-table">
-                        <colgroup>
-                            <col style="width: 12%;">
-                            <col style="width: 33%;">
-                            <col style="width: 15%;">
-                            <col style="width: 15%;">
-                            <col style="width: 10%;">
-                            <col style="width: 15%;">
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Tarikh</th>
-                                <th>Jenis Kerja</th>
-                                <th>Kos (RM)</th>
-                                <th>Status</th>
-                                <th>Resit</th>
-                                <th>Tindakan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="m in asset.maintenances" :key="m.id">
-                                <td>{{ m.tarikh }}</td>
-                                <td class="truncate-text">{{ m.jenis_kerja }}</td>
-                                <td>{{ parseFloat(m.kos_rm).toFixed(2) }}</td>
-                                <td>
-                                    <span :class="['status-badge', m.status === 'Siap' ? 'siap' : 'proses']">{{ m.status }}</span>
-                                </td>
-                                <td>
-                                    <a v-if="m.resit_path" :href="'/storage/' + m.resit_path" target="_blank" class="link-text">Lihat</a>
-                                    <span v-else class="text-muted">-</span>
-                                </td>
-                                <td>
-                                    <div class="action-btns">
-                                        <button @click="openEdit(m, asset)" class="btn-edit">Edit</button>
-                                        <button @click="deleteRecord(m.id)" class="btn-delete">Padam</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr v-if="asset.maintenances.length === 0">
-                                <td colspan="6" style="text-align: center; padding: 20px; color: #94a3b8;">Tiada rekod penyelenggaraan.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-wrapper">
+                        <table class="grid-table">
+                            <colgroup>
+                                <col style="width: 12%;">
+                                <col style="width: 33%;">
+                                <col style="width: 15%;">
+                                <col style="width: 15%;">
+                                <col style="width: 10%;">
+                                <col style="width: 15%;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Tarikh</th>
+                                    <th>Jenis Kerja</th>
+                                    <th>Kos (RM)</th>
+                                    <th>Status</th>
+                                    <th>Resit</th>
+                                    <th>Tindakan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="m in asset.maintenances" :key="m.id">
+                                    <td>{{ m.tarikh }}</td>
+                                    <td class="truncate-text">{{ m.jenis_kerja }}</td>
+                                    <td>{{ parseFloat(m.kos_rm).toFixed(2) }}</td>
+                                    <td>
+                                        <span :class="['status-badge', m.status === 'Siap' ? 'siap' : 'proses']">{{ m.status }}</span>
+                                    </td>
+                                    <td>
+                                        <a v-if="m.resit_path" :href="'/storage/' + m.resit_path" target="_blank" class="link-text">Lihat</a>
+                                        <span v-else class="text-muted">-</span>
+                                    </td>
+                                    <td>
+                                        <div class="action-btns">
+                                            <button @click="openEdit(m, asset)" class="btn-edit">Edit</button>
+                                            <button @click="deleteRecord(m.id)" class="btn-delete">Padam</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr v-if="asset.maintenances.length === 0">
+                                    <td colspan="6" style="text-align: center; padding: 20px; color: #94a3b8;">Tiada rekod penyelenggaraan.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div v-if="showModal" class="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-tabs">
-                    <button @click="activeTab = 'record'" :class="{ active: activeTab === 'record' }">Log Kerja</button>
-                    <button @click="activeTab = 'asset'" :class="{ active: activeTab === 'asset' }">Daftar Aset</button>
+            <div v-if="showModal" class="modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-tabs">
+                        <button @click="activeTab = 'record'" :class="{ active: activeTab === 'record' }">Log Kerja</button>
+                        <button @click="activeTab = 'asset'" :class="{ active: activeTab === 'asset' }">Daftar Aset</button>
+                    </div>
+                    <div class="modal-body">
+                        <form v-if="activeTab === 'record'" @submit.prevent="submitRecord">
+                            <div class="form-group">
+                                <label>Pilih Aset</label>
+                                <select v-model="recordForm.asset_id" required class="form-input">
+                                    <option v-for="a in assets" :key="a.id" :value="a.id">{{ a.name }} ({{ a.category }})</option>
+                                </select>
+                            </div>
+                            <input v-model="recordForm.jenis_kerja" placeholder="Jenis Kerja" required class="form-input">
+                            <div class="form-row">
+                                <input v-model="recordForm.kos_rm" type="number" step="0.01" placeholder="Kos RM" required class="form-input">
+                                <input v-model="recordForm.tarikh" type="date" required class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Status Kerja</label>
+                                <select v-model="recordForm.status" class="form-input">
+                                    <option value="Siap">Siap</option>
+                                    <option value="Dalam Proses">Dalam Proses</option>
+                                </select>
+                            </div>
+                            <input type="file" @input="recordForm.resit = $event.target.files[0]" class="form-input">
+                            <button type="submit" class="btn-submit">Simpan Rekod</button>
+                        </form>
+
+                        <form v-else @submit.prevent="submitAsset">
+                            <label>Kategori (Pilih atau Taip Baru)</label>
+                            <input v-model="assetForm.category" list="category-options" class="form-input" placeholder="E.g. CCTV, Weighbridge">
+                            <datalist id="category-options">
+                                <option v-for="c in availableCategories" :key="c" :value="c"></option>
+                            </datalist>
+                            
+                            <label>Nama Aset</label>
+                            <input v-model="assetForm.name" placeholder="Nama Aset" required class="form-input">
+
+                            <div v-if="assetForm.category === 'Weighbridge'" class="highlight-box">
+                                <label>📅 Tarikh Kalibrasi Seterusnya</label>
+                                <input v-model="assetForm.next_cal" type="date" class="form-input">
+                            </div>
+
+                            <button type="submit" class="btn-submit">Daftar Aset Baru</button>
+                        </form>
+                        <button @click="showModal = false" class="btn-close">Tutup</button>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <form v-if="activeTab === 'record'" @submit.prevent="submitRecord">
-                        <div class="form-group">
-                            <label>Pilih Aset</label>
-                            <select v-model="recordForm.asset_id" required class="form-input">
-                                <option v-for="a in assets" :key="a.id" :value="a.id">{{ a.name }} ({{ a.category }})</option>
-                            </select>
-                        </div>
-                        <input v-model="recordForm.jenis_kerja" placeholder="Jenis Kerja" required class="form-input">
-                        <div class="form-row">
-                            <input v-model="recordForm.kos_rm" type="number" step="0.01" placeholder="Kos RM" required class="form-input">
-                            <input v-model="recordForm.tarikh" type="date" required class="form-input">
-                        </div>
-                        <div class="form-group">
-                            <label>Status Kerja</label>
-                            <select v-model="recordForm.status" class="form-input">
+            </div>
+
+            <div v-if="showEditModal" class="modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h3>Kemaskini Rekod</h3>
+                        <form @submit.prevent="updateRecord">
+                            <label>Jenis Kerja</label>
+                            <input v-model="editForm.jenis_kerja" required class="form-input">
+                            <div class="form-row">
+                                <div>
+                                    <label>Kos (RM)</label>
+                                    <input v-model="editForm.kos_rm" type="number" step="0.01" required class="form-input">
+                                </div>
+                                <div>
+                                    <label>Tarikh</label>
+                                    <input v-model="editForm.tarikh" type="date" required class="form-input">
+                                </div>
+                            </div>
+                            <label>Status</label>
+                            <select v-model="editForm.status" class="form-input">
                                 <option value="Siap">Siap</option>
                                 <option value="Dalam Proses">Dalam Proses</option>
                             </select>
-                        </div>
-                        <input type="file" @input="recordForm.resit = $event.target.files[0]" class="form-input">
-                        <button type="submit" class="btn-submit">Simpan Rekod</button>
-                    </form>
 
-                    <form v-else @submit.prevent="submitAsset">
-                        <label>Kategori (Pilih atau Taip Baru)</label>
-                        <input v-model="assetForm.category" list="category-options" class="form-input" placeholder="E.g. CCTV, Weighbridge">
-                        <datalist id="category-options">
-                            <option v-for="c in availableCategories" :key="c" :value="c"></option>
-                        </datalist>
-                        
-                        <label>Nama Aset</label>
-                        <input v-model="assetForm.name" placeholder="Nama Aset" required class="form-input">
+                            <div v-if="editForm.asset_category === 'Weighbridge'" class="highlight-box">
+                                <label>📅 Kemaskini Tarikh Kalibrasi Seterusnya</label>
+                                <input v-model="editForm.next_cal" type="date" class="form-input">
+                            </div>
 
-                        <div v-if="assetForm.category === 'Weighbridge'" class="highlight-box">
-                            <label>📅 Tarikh Kalibrasi Seterusnya</label>
-                            <input v-model="assetForm.next_cal" type="date" class="form-input">
-                        </div>
-
-                        <button type="submit" class="btn-submit">Daftar Aset Baru</button>
-                    </form>
-                    <button @click="showModal = false" class="btn-close">Tutup</button>
+                            <button type="submit" class="btn-submit">Simpan Perubahan</button>
+                            <button type="button" @click="showEditModal = false" class="btn-close">Batal</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div v-if="showEditModal" class="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h3>Kemaskini Rekod</h3>
-                    <form @submit.prevent="updateRecord">
-                        <label>Jenis Kerja</label>
-                        <input v-model="editForm.jenis_kerja" required class="form-input">
-                        <div class="form-row">
-                            <div>
-                                <label>Kos (RM)</label>
-                                <input v-model="editForm.kos_rm" type="number" step="0.01" required class="form-input">
-                            </div>
-                            <div>
-                                <label>Tarikh</label>
-                                <input v-model="editForm.tarikh" type="date" required class="form-input">
-                            </div>
-                        </div>
-                        <label>Status</label>
-                        <select v-model="editForm.status" class="form-input">
-                            <option value="Siap">Siap</option>
-                            <option value="Dalam Proses">Dalam Proses</option>
-                        </select>
-
-                        <div v-if="editForm.asset_category === 'Weighbridge'" class="highlight-box">
-                            <label>📅 Kemaskini Tarikh Kalibrasi Seterusnya</label>
-                            <input v-model="editForm.next_cal" type="date" class="form-input">
-                        </div>
-
-                        <button type="submit" class="btn-submit">Simpan Perubahan</button>
-                        <button type="button" @click="showEditModal = false" class="btn-close">Batal</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    </AuthenticatedLayout>
 </template>
 
 <style scoped>
+/* Style kekal sama seperti asal */
 .dashboard-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
 .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 .btn-primary { background: #2563eb; color: white; padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }

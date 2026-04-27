@@ -25,17 +25,15 @@ class AssetSeeder extends Seeder
         ]);
 
         $pts2 = Asset::create([
-            'name' => 'Weighbridge PTS Klang',
-            'category' => 'Weighbridge',
+            'name' => 'Genset PTS Klang',
+            'category' => 'Genset',
             'pts_lokasi' => 'Klang',
-            'metadata' => ['tarikh_kalibrasi_seterusnya' => '2026-08-15']
         ]);
 
         $pts3 = Asset::create([
-            'name' => 'Weighbridge PTS Subang',
-            'category' => 'Weighbridge',
+            'name' => 'Fasiliti PTS Subang',
+            'category' => 'Bangunan/Fasiliti',
             'pts_lokasi' => 'Subang',
-            'metadata' => ['tarikh_kalibrasi_seterusnya' => '2026-12-20']
         ]);
 
         AssetMaintenance::create([
@@ -49,7 +47,7 @@ class AssetSeeder extends Seeder
 
         AssetMaintenance::create([
             'asset_id' => $pts2->id,
-            'jenis_kerja' => 'Repair Load Cell',
+            'jenis_kerja' => 'Servis',
             'kos_rm' => 850.00,
             'tarikh' => '2026-04-10',
             'status' => 'Siap',

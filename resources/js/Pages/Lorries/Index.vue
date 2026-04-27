@@ -15,7 +15,7 @@ const lorryForm = useForm({
 });
 
 const submitLorry = () => {
-    lorryForm.post(route('lorries.store'), {
+    lorryForm.post(route('lorry.store'), {
         onSuccess: () => lorryForm.reset(),
     });
 };
@@ -167,8 +167,8 @@ const submitMaintenance = () => {
                         <button type="button" @click="showModal = false" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500">Batal</button>
                         <button type="submit" 
         :disabled="maintenanceForm.processing"
-        style="background-color: #16a34a; color: white; padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; width: 20%;">
-    {{ maintenanceForm.processing ? 'Menyimpan...' : 'Simpan Log Penyelenggaraan' }}
+        style="background-color: #16a34a; color: white; padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold;">
+        {{ maintenanceForm.processing ? 'Menyimpan...' : 'Simpan Log Penyelenggaraan' }}
 </button>
                     </div>
                 </form>

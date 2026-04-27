@@ -37,7 +37,7 @@ class DashboardController extends Controller
     private function adminDashboard($now)
     {
         // 1. Total Kos Maintenance Bulan Ini (All PTS)
-        $totalKosBulanIni = maintenancelog::whereMonth('tarikh', $now->month)
+        $totalKosBulanIni = MaintenanceLog::whereMonth('tarikh', $now->month)
             ->whereYear('tarikh', $now->year)
             ->sum('kos_rm') + 
             AssetMaintenance::whereMonth('tarikh', $now->month)
@@ -133,7 +133,7 @@ class DashboardController extends Controller
         $bakiBudget = $monthlyLimit - $totalSpent;
 
         // Individual sums for the specific widgets
-        $kosLori = maintenancelog::whereHas('lorry', function($q) use ($myLocation) {
+        $kosLori = MaintenanceLog::whereHas('lorry', function($q) use ($myLocation) {
                 $q->where('pts_lokasi', $myLocation);
             })
             ->where('tarikh', '>=', $startOfMonth)
@@ -148,7 +148,7 @@ class DashboardController extends Controller
 
         // --- 2. DATA FOR TABLES (LAST 7 DAYS ONLY) ---
 
-        $lorryLogs = maintenancelog::with('lorry')
+        $lorryLogs = MaintenanceLog::with('lorry')
             ->whereHas('lorry', function($q) use ($myLocation) {
                 $q->where('pts_lokasi', $myLocation);
             })
@@ -180,7 +180,7 @@ class DashboardController extends Controller
      */
     private function calculateTotalSpent($location, $now)
     {
-        $lorry = maintenancelog::whereHas('lorry', fn($q) => $q->where('pts_lokasi', $location))
+        $lorry = MaintenanceLog::whereHas('lorry', fn($q) => $q->where('pts_lokasi', $location))
             ->whereMonth('tarikh', $now->month)
             ->whereYear('tarikh', $now->year)
             ->sum('kos_rm');

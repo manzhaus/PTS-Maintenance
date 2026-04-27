@@ -67,6 +67,12 @@ Route::middleware('auth')->group(function () {
 
     // Staff Management
     Route::resource('staff', StaffController::class);
+
+    // Contoh cara nak dapatkan token di browser (Hanya untuk testing!)
+    Route::get('/get-token', function () {
+    $user = App\Models\User::first();
+    return $user->createToken('test-token')->plainTextToken;
+    });
 });
 
 require __DIR__.'/auth.php';

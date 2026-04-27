@@ -1,14 +1,23 @@
 <script setup>
 import { ref } from 'vue';
 import { useForm, router, Head } from '@inertiajs/vue3';
-// Import layout untuk paparkan navbar
+
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({
     assets: Array,
     availableCategories: Array,
     currentCategory: String,
+    filters: Object
 });
+
+const handleExport = () => {
+    // Ambil parameter carian semasa dari URL
+    const params = new URLSearchParams(window.location.search).toString();
+    
+    // Redirect ke route export bersama params
+    window.location.href = route('assets.export', { category: props.currentCategory });
+};
 
 const showModal = ref(false);
 const showEditModal = ref(false);
@@ -102,7 +111,14 @@ const filterByCategory = (cat) => {
                     <h1>Penyelenggaraan Aset</h1>
                     <p>Urus pelbagai kategori aset dalam satu paparan berpusat.</p>
                 </div>
+                
                 <button @click="showModal = true" class="btn-primary">+ Log Maintenance / Asset Baru</button>
+                <button 
+            @click="handleExport" 
+            class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 font-bold text-sm"
+        >
+            <i class="fas fa-file-export mr-2"></i> Export Excel/CSV
+        </button>
             </header>
 
             <nav class="filter-nav">

@@ -6,6 +6,7 @@ use App\Models\Asset;
 use App\Models\AssetMaintenance;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Response;
 
 class AssetMaintenanceController extends Controller
 {
@@ -17,6 +18,21 @@ class AssetMaintenanceController extends Controller
             $q->orderBy('tarikh', 'desc');
         }]);
 
+        // Reusable Filter Logic
+        $this->applyFilters($query, $user, $category);
+
+        return Inertia::render('Assets/Index', [
+            'assets' => $query->get(),
+            'availableCategories' => Asset::distinct()->pluck('category'),
+            'currentCategory' => $category,
+        ]);
+    }
+
+    /**
+     * Helper function to apply same filters for Index and Export
+     */
+    private function applyFilters($query, $user, $category)
+    {
         // Filter by Location
         if ($user->role === 'supervisor') {
             $query->where('pts_lokasi', $user->pts_lokasi);
@@ -26,14 +42,65 @@ class AssetMaintenanceController extends Controller
         if ($category !== 'All') {
             $query->where('category', $category);
         }
-
-        return Inertia::render('Assets/Index', [
-            'assets' => $query->get(),
-            'availableCategories' => Asset::distinct()->pluck('category'),
-            'currentCategory' => $category,
-        ]);
     }
 
+    public function export(Request $request, $category = 'All')
+    {
+        $user = auth()->user();
+        
+        // Eager load maintenance records
+        $query = Asset::with(['maintenances' => function($q) {
+            $q->orderBy('tarikh', 'desc');
+        }]);
+
+        // Apply same filters as Index
+        $this->applyFilters($query, $user, $category);
+
+        $assets = $query->get();
+
+        // CSV Preparation
+        $fileName = "Asset_Maintenance_Report_{$category}_" . now()->format('Ymd') . ".csv";
+        
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $callback = function() use($assets) {
+            $file = fopen('php://output', 'w');
+            
+            // Header Row
+            fputcsv($file, ['Aset', 'Kategori', 'Lokasi', 'Jenis Kerja', 'Kos (RM)', 'Tarikh', 'Status']);
+
+            foreach ($assets as $asset) {
+                // Jika aset tiada maintenance, tunjuk info asas sahaja
+                if ($asset->maintenances->isEmpty()) {
+                    fputcsv($file, [$asset->name, $asset->category, $asset->pts_lokasi, '-', '-', '-', '-']);
+                } else {
+                    foreach ($asset->maintenances as $m) {
+                        fputcsv($file, [
+                            $asset->name,
+                            $asset->category,
+                            $asset->pts_lokasi,
+                            $m->jenis_kerja,
+                            $m->kos_rm,
+                            $m->tarikh,
+                            $m->status
+                        ]);
+                    }
+                }
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    // --- Method storeRecord, registerAsset, updateRecord, destroyRecord kekal sama ---
+    
     public function storeRecord(Request $request)
     {
         $request->validate([
@@ -59,7 +126,7 @@ class AssetMaintenanceController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'category' => 'required|string', // Admin can type anything here
+            'category' => 'required|string',
             'next_cal' => 'nullable|date',
         ]);
 
@@ -74,39 +141,34 @@ class AssetMaintenanceController extends Controller
     }
 
     public function updateRecord(Request $request, $id)
-{
-    // Load the record with its parent asset
-    $record = AssetMaintenance::with('asset')->findOrFail($id);
-    
-    $request->validate([
-        'jenis_kerja' => 'required|string',
-        'kos_rm' => 'required|numeric',
-        'tarikh' => 'required|date',
-        'status' => 'required|in:Siap,Dalam Proses',
-        'next_cal' => 'nullable|date', // Validate the new field
-    ]);
-
-    // 1. Update the Maintenance Log
-    $record->update($request->only('jenis_kerja', 'kos_rm', 'tarikh', 'status'));
-
-    // 2. If it's a Weighbridge, update the Asset's metadata
-    if ($record->asset->category === 'Weighbridge' && $request->has('next_cal')) {
-        $asset = $record->asset;
-        $metadata = $asset->metadata ?? [];
-        $metadata['tarikh_kalibrasi_seterusnya'] = $request->next_cal;
+    {
+        $record = AssetMaintenance::with('asset')->findOrFail($id);
         
-        $asset->metadata = $metadata;
-        $asset->save();
+        $request->validate([
+            'jenis_kerja' => 'required|string',
+            'kos_rm' => 'required|numeric',
+            'tarikh' => 'required|date',
+            'status' => 'required|in:Siap,Dalam Proses',
+            'next_cal' => 'nullable|date',
+        ]);
+
+        $record->update($request->only('jenis_kerja', 'kos_rm', 'tarikh', 'status'));
+
+        if ($record->asset->category === 'Weighbridge' && $request->has('next_cal')) {
+            $asset = $record->asset;
+            $metadata = $asset->metadata ?? [];
+            $metadata['tarikh_kalibrasi_seterusnya'] = $request->next_cal;
+            
+            $asset->metadata = $metadata;
+            $asset->save();
+        }
+
+        return back()->with('success', 'Rekod dikemaskini.');
     }
 
-    return back()->with('success', 'Rekod dan maklumat aset dikemaskini.');
-}
-
-public function destroyRecord($id)
-{
-    $record = AssetMaintenance::findOrFail($id);
-    $record->delete();
-    
-    return back()->with('success', 'Rekod berjaya dipadam.');
-}
+    public function destroyRecord($id)
+    {
+        AssetMaintenance::findOrFail($id)->delete();
+        return back()->with('success', 'Rekod berjaya dipadam.');
+    }
 }

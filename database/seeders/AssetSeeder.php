@@ -32,7 +32,7 @@ class AssetSeeder extends Seeder
 
         $pts3 = Asset::create([
             'name' => 'Fasiliti PTS Subang',
-            'category' => 'Bangunan/Fasiliti',
+            'category' => 'Fasiliti',
             'pts_lokasi' => 'Subang',
         ]);
 

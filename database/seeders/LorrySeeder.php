@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Lorry;
 use App\Models\User;
-use App\Models\maintenancelog;
+use App\Models\Maintenancelog;
 use Illuminate\Database\Seeder;
 
 class LorrySeeder extends Seeder
@@ -60,7 +60,7 @@ class LorrySeeder extends Seeder
         // 3. Create 5 Maintenance Records (Distributed)
 
         // Record 1: Lorry 1 (Shah Alam) - Servis
-        maintenancelog::create([
+        MaintenanceLog::create([
             'lorry_id' => $lorry1->id, 
             'created_by' => $sv->id,
             'tarikh' => '2026-04-10',
@@ -71,7 +71,7 @@ class LorrySeeder extends Seeder
         ]);
 
         // Record 2: Lorry 2 (Klang) - Tayar
-        maintenancelog::create([
+        MaintenanceLog::create([
             'lorry_id' => $lorry2->id,
             'created_by' => $admin->id,
             'tarikh' => '2026-04-12',
@@ -82,7 +82,7 @@ class LorrySeeder extends Seeder
         ]);
 
         // Record 3: Lorry 3 (Subang) - Bateri
-        maintenancelog::create([
+        MaintenanceLog::create([
             'lorry_id' => $lorry4->id,
             'created_by' => $admin->id,
             'tarikh' => '2026-04-15',
@@ -95,7 +95,7 @@ class LorrySeeder extends Seeder
         // --- RECURRING ISSUE TEST: Lorry 4 (Shah Alam) ---
         
         // Record 4: First visit for the issue
-        maintenancelog::create([
+        MaintenanceLog::create([
             'lorry_id' => $lorry4->id,
             'created_by' => $sv->id,
             'tarikh' => '2026-04-18',
@@ -106,7 +106,7 @@ class LorrySeeder extends Seeder
         ]);
 
         // Record 5: Second visit for the same issue (Recurring)
-        maintenancelog::create([
+        MaintenanceLog::create([
             'lorry_id' => $lorry4->id,
             'created_by' => $sv->id,
             'tarikh' => '2026-04-22',

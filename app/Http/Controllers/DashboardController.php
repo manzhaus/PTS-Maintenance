@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\maintenancelog;
+use App\Models\MaintenanceLog;
 use App\Models\Asset;
 use App\Models\AssetMaintenance;
 use App\Models\BudgetRequest;

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BudgetRequest;
 use App\Models\User;
-use App\Models\maintenancelog;
+use App\Models\MaintenanceLog;
 use App\Models\AssetMaintenance;
 use Illuminate\Http\Request;
 use Carbon\Carbon;

@@ -18,6 +18,7 @@ class AssetMaintenance extends Model
         'resit_path',
         'status',
         'created_by',
+        'updated_by'
     ];
 
     /**
@@ -35,4 +36,9 @@ class AssetMaintenance extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function editor()
+{
+    return $this->belongsTo(User::class, 'updated_by');
+}
 }

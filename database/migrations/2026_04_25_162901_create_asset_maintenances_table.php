@@ -19,7 +19,8 @@ return new class extends Migration
     $table->date('tarikh');
     $table->string('resit_path')->nullable();
     $table->enum('status', ['Siap', 'Dalam Proses'])->default('Dalam Proses');
-    $table->foreignId('created_by')->constrained('users');
+    $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+    $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
     $table->timestamps();
 });
     }

@@ -40,7 +40,7 @@ class AssetSeeder extends Seeder
             'asset_id' => $pts1->id,
             'jenis_kerja' => 'Kalibrasi Berjadual',
             'kos_rm' => 1500.00,
-            'tarikh' => '2026-04-01',
+            'tarikh' => '2026-04-24',
             'status' => 'Siap',
             'created_by' => $admin->id
         ]);
@@ -49,7 +49,7 @@ class AssetSeeder extends Seeder
             'asset_id' => $pts2->id,
             'jenis_kerja' => 'Servis',
             'kos_rm' => 850.00,
-            'tarikh' => '2026-04-10',
+            'tarikh' => '2026-04-25',
             'status' => 'Siap',
             'created_by' => $sv->id
         ]);

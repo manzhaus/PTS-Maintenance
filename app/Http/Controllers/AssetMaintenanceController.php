@@ -15,7 +15,7 @@ class AssetMaintenanceController extends Controller
         $user = auth()->user();
         
         $query = Asset::with(['maintenances' => function($q) {
-            $q->orderBy('tarikh', 'desc');
+            $q->with(['creator', 'editor'])->orderBy('tarikh', 'desc');
         }]);
 
         // Reusable Filter Logic
@@ -119,6 +119,10 @@ class AssetMaintenanceController extends Controller
             'created_by' => auth()->id()
         ]);
 
+        $record->update($request->only('jenis_kerja', 'kos_rm', 'tarikh', 'status') + [
+        'updated_by' => auth()->id(), // Simpan ID pengedit terakhir
+        ]);
+
         return back();
     }
 
@@ -137,7 +141,7 @@ class AssetMaintenanceController extends Controller
             'metadata' => $request->next_cal ? ['tarikh_kalibrasi_seterusnya' => $request->next_cal] : null,
         ]);
 
-        return back()->with('success', 'Aset berjaya didaftarkan.');
+        return back()->with('success', 'Rekod dikemaskini.');
     }
 
     public function updateRecord(Request $request, $id)
@@ -152,7 +156,9 @@ class AssetMaintenanceController extends Controller
             'next_cal' => 'nullable|date',
         ]);
 
-        $record->update($request->only('jenis_kerja', 'kos_rm', 'tarikh', 'status'));
+        $record->update($request->only('jenis_kerja', 'kos_rm', 'tarikh', 'status') + [
+        'updated_by' => auth()->id()
+    ]);
 
         if ($record->asset->category === 'Weighbridge' && $request->has('next_cal')) {
             $asset = $record->asset;

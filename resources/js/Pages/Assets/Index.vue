@@ -151,13 +151,7 @@ const filterByCategory = (cat) => {
                     <div class="table-wrapper">
                         <table class="grid-table">
                             <colgroup>
-                                <col style="width: 12%;">
-                                <col style="width: 33%;">
-                                <col style="width: 15%;">
-                                <col style="width: 15%;">
-                                <col style="width: 10%;">
-                                <col style="width: 15%;">
-                            </colgroup>
+    <col style="width: 10%;"> <col style="width: 22%;"> <col style="width: 12%;"> <col style="width: 10%;"> <col style="width: 8%;">  <col style="width: 13%;"> <col style="width: 13%;"> <col style="width: 12%;"> </colgroup>
                             <thead>
                                 <tr>
                                     <th>Tarikh</th>
@@ -165,6 +159,8 @@ const filterByCategory = (cat) => {
                                     <th>Kos (RM)</th>
                                     <th>Status</th>
                                     <th>Resit</th>
+                                    <th>Dibuat Oleh</th>
+                                    <th>Edit Terakhir</th>
                                     <th>Tindakan</th>
                                 </tr>
                             </thead>
@@ -180,6 +176,15 @@ const filterByCategory = (cat) => {
                                         <a v-if="m.resit_path" :href="'/storage/' + m.resit_path" target="_blank" class="link-text">Lihat</a>
                                         <span v-else class="text-muted">-</span>
                                     </td>
+                                    
+                                    <td class="text-xs text-gray-600">
+                                        {{ m.creator ? m.creator.name : 'Sistem' }}
+                                    </td>
+
+                                    <td class="text-xs text-gray-500">
+                                        {{ m.editor ? m.editor.name : '-' }}
+                                    </td>
+
                                     <td>
                                         <div class="action-btns">
                                             <button @click="openEdit(m, asset)" class="btn-edit">Edit</button>
@@ -188,7 +193,7 @@ const filterByCategory = (cat) => {
                                     </td>
                                 </tr>
                                 <tr v-if="asset.maintenances.length === 0">
-                                    <td colspan="6" style="text-align: center; padding: 20px; color: #94a3b8;">Tiada rekod penyelenggaraan.</td>
+                                    <td colspan="8" style="text-align: center; padding: 20px; color: #94a3b8;">Tiada rekod penyelenggaraan.</td>
                                 </tr>
                             </tbody>
                         </table>

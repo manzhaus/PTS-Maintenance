@@ -4,9 +4,10 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Supervisor Dashboard: <span class="text-primary">{{ $myLocation }}</span></h2>
-    <a href="{{ route('reports.index') }}" class="btn btn-primary shadow-sm">
-        <i class="fas fa-file-invoice mr-1"></i> Lorry Reports
-    </a>
+    
+    <a href="{{ route('assets.index') }}" class="btn btn-primary shadow-sm">
+            <i class="fas fa-file-alt mr-1"></i> Assets Reports
+            </a>
     </div>
 
     <div class="row mb-4">

@@ -6,11 +6,11 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="h4 font-weight-bold">HQ Admin Dashboard: <span class="text-primary">Global Overview</span></h2>
         <div>
-            <a href="{{ route('admin.budgets.index') }}" class="btn btn-dark shadow-sm mr-2">
-                <i class="fas fa-coins mr-1"></i> Budget Management
-            </a>
             <a href="{{ route('reports.index') }}" class="btn btn-primary shadow-sm">
-                <i class="fas fa-file-download mr-1"></i> Full Reports
+                <i class="fas fa-file-download mr-1"></i> Lorry Reports
+            </a>
+            <a href="{{ route('assets.index') }}" class="btn btn-primary shadow-sm">
+            <i class="fas fa-file-alt mr-1"></i> Assets Reports
             </a>
         </div>
     </div>

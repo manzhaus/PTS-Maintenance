@@ -62,7 +62,7 @@ const user = usePage().props.auth.user;
 
                                 <NavLink :href="route('reports.index')" :active="route().current('reports.*')" 
                                          class="text-white hover:text-blue-400 font-medium transition duration-150">
-                                    <i class="fas fa-file-invoice mr-1"></i> Lorry Management Reports
+                                    <i class="fas fa-file-invoice mr-1"></i> Lorry Maintenance Reports
                                 </NavLink>
                             </div>
                         </div>

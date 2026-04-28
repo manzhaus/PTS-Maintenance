@@ -48,6 +48,7 @@ const editForm = useForm({
 const assetForm = useForm({
     name: '', 
     category: '', 
+    pts_lokasi: '',
     next_cal: '', // This is for metadata
 });
 
@@ -240,6 +241,9 @@ const filterByCategory = (cat) => {
                             
                             <label>Nama Aset</label>
                             <input v-model="assetForm.name" placeholder="Nama Aset" required class="form-input">
+
+                            <label>Lokasi PTS</label>
+                            <input v-model="assetForm.pts_lokasi" placeholder="Contoh: Shah Alam" required class="form-input">
 
                             <div v-if="assetForm.category === 'Weighbridge'" class="highlight-box">
                                 <label>📅 Tarikh Kalibrasi Seterusnya</label>

@@ -71,7 +71,7 @@
 
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('reports*') ? 'active-link' : '' }}" href="{{ route('reports.index') }}">
-                            <i class="fas fa-file-invoice mr-1"></i> {{ auth()->user()->role === 'admin' ? 'Lorry Reports' : 'Lorry Reports' }}
+                            <i class="fas fa-file-invoice mr-1"></i> {{ auth()->user()->role === 'admin' ? 'Lorry Management Reports' : 'Lorry Reports' }}
                         </a>
                     </li>
                 </ul>

@@ -131,13 +131,14 @@ class AssetMaintenanceController extends Controller
         $request->validate([
             'name' => 'required|string',
             'category' => 'required|string',
+            'pts_lokasi' => 'required|string',
             'next_cal' => 'nullable|date',
         ]);
-
+        
         Asset::create([
             'name' => $request->name,
             'category' => $request->category,
-            'pts_lokasi' => auth()->user()->pts_lokasi ?? 'Shah Alam',
+            'pts_lokasi' => $validated['pts_lokasi'],
             'metadata' => $request->next_cal ? ['tarikh_kalibrasi_seterusnya' => $request->next_cal] : null,
         ]);
 

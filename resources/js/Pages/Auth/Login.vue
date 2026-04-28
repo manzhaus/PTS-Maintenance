@@ -31,9 +31,20 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Log in" />
+        <Head title="Log Masuk" />
 
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+        <div class="flex justify-center mb-4">
+    <Link href="/">
+        <ApplicationLogo class="h-64 w-auto fill-current text-gray-500" />
+    </Link>
+</div>
+
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-800">Sistem Maintenance PTS</h1>
+            <p class="text-sm text-gray-600">Sila masukkan kredential anda untuk akses</p>
+        </div>
+
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
 
@@ -49,13 +60,14 @@ const submit = () => {
                     required
                     autofocus
                     autocomplete="username"
+                    placeholder="admin@pts.com"
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="password" value="Kata Laluan" />
 
                 <TextInput
                     id="password"
@@ -64,35 +76,30 @@ const submit = () => {
                     v-model="form.password"
                     required
                     autocomplete="current-password"
+                    placeholder="••••••••"
                 />
 
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
-            <div class="mt-4 block">
+            <div class="block mt-4">
                 <label class="flex items-center">
                     <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600"
-                        >Remember me</span
-                    >
+                    <span class="ms-2 text-sm text-gray-600">Ingat saya</span>
                 </label>
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
+            <div class="flex items-center justify-end mt-6">
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                    Forgot your password?
+                    Lupa kata laluan?
                 </Link>
 
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Log in
+                <PrimaryButton class="ms-4 bg-blue-600 hover:bg-blue-700 py-3 px-6" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Log Masuk
                 </PrimaryButton>
             </div>
         </form>

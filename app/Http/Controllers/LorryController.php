@@ -10,9 +10,18 @@ class LorryController extends Controller
 {
     public function index()
 {
-    $lorries = Lorry::withCount(['maintenanceLogs' => function ($query) {
+    $user = auth()->user();
+
+    $query = Lorry::withCount(['maintenanceLogs' => function ($query) {
         $query->where('tarikh', '>=', now()->subDays(30));
-    }])->get();
+    }]);
+
+    // Jika BUKAN admin, tambah syarat tapis lokasi
+    if ($user->role !== 'admin') {
+        $query->where('pts_lokasi', $user->pts_lokasi);
+    }
+
+    $lorries = $query->get();
 
     return Inertia::render('Lorries/Index', [
         'lorries' => $lorries

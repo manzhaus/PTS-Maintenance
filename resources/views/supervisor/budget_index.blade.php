@@ -75,8 +75,10 @@
                             <td class="align-middle">{{ $req->created_at->format('d/m/Y') }}</td>
                             <td class="align-middle font-weight-bold text-primary">RM {{ number_format($req->jumlah_dipohon, 2) }}</td>
                             <td class="align-middle text-left" style="max-width: 300px;">
-                                <div class="small text-dark font-weight-bold mb-1">Justifikasi:</div>
-                                <div class="small text-muted">{{ $req->sebab }}</div>
+                                <div class="text-center">
+    <div class="small text-dark font-weight-bold mb-1">Justifikasi:</div>
+    <div class="small text-muted">{{ $req->sebab }}</div>
+</div>
                             </td>
                             <td class="align-middle">
                                 @if($req->lampiran_quotation)

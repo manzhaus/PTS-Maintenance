@@ -101,31 +101,34 @@ class AssetMaintenanceController extends Controller
 
     // --- Method storeRecord, registerAsset, updateRecord, destroyRecord kekal sama ---
     
-    public function storeRecord(Request $request)
+    public function storeRecord(Request $request) // atau store
 {
-    $request->validate([
-        'asset_id' => 'required|exists:assets,id',
+    // 1. ANDA MESTI SIMPAN HASIL VALIDATE KE DALAM $validated
+    $validated = $request->validate([
+        'asset_id'   => 'required|exists:assets,id',
         'jenis_kerja' => 'required|string',
-        'kos_rm' => 'required|numeric',
-        'tarikh' => 'required|date',
-        'status' => 'required|in:Siap,Dalam Proses',
-        'resit' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+        'kos_rm'     => 'required|numeric',
+        'tarikh'      => 'required|date',
+        'status'     => 'required|in:Siap,Dalam Proses',
+        'resit'      => 'nullable|file|mimes:pdf,jpg,png|max:5120',
     ]);
 
-    // Simpan fail resit jika ada
+    // Simpan fail jika ada
     $path = $request->hasFile('resit') ? $request->file('resit')->store('receipts', 'public') : null;
 
-    // 1. Simpan rekod baru ke dalam pembolehubah $record
-    $record = AssetMaintenance::create($request->only('asset_id', 'jenis_kerja', 'kos_rm', 'tarikh', 'status') + [
+    // 2. SEKARANG BARU BOLEH GUNA $validated
+    $record = AssetMaintenance::create([
+        'asset_id'   => $validated['asset_id'],
+        'jenis_kerja' => $validated['jenis_kerja'],
+        'kos_rm'     => $validated['kos_rm'],
+        'tarikh'      => $validated['tarikh'],
+        'status'     => $validated['status'],
         'resit_path' => $path,
         'created_by' => auth()->id(),
-        'updated_by' => auth()->id(), // Set juga updated_by semasa create pertama kali
+        'updated_by' => auth()->id(),
     ]);
 
-    // 2. Padam bahagian $record->update(...) yang lama itu 
-    // kerana data sudah disimpan semasa AssetMaintenance::create di atas.
-
-    return back()->with('message', 'Rekod penyelenggaraan berjaya ditambah!');
+    return back()->with('message', 'Rekod berjaya disimpan!');
 }
 
     public function registerAsset(Request $request)
@@ -140,7 +143,7 @@ class AssetMaintenanceController extends Controller
         Asset::create([
             'name' => $request->name,
             'category' => $request->category,
-            'pts_lokasi' => $validated['pts_lokasi'],
+            'pts_lokasi' => $request->pts_lokasi,
             'metadata' => $request->next_cal ? ['tarikh_kalibrasi_seterusnya' => $request->next_cal] : null,
         ]);
 

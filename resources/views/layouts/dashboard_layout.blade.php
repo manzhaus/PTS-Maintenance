@@ -64,7 +64,7 @@
                     @else
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('my-budget-requests*') ? 'active-link' : '' }}" href="{{ route('budget_requests.index') }}">
-                                <i class="fas fa-hand-holding-usd mr-1"></i> My Requests
+                                <i class="fas fa-hand-holding-usd mr-1"></i> My Budget Requests
                             </a>
                         </li>
                     @endif

@@ -102,29 +102,31 @@ class AssetMaintenanceController extends Controller
     // --- Method storeRecord, registerAsset, updateRecord, destroyRecord kekal sama ---
     
     public function storeRecord(Request $request)
-    {
-        $request->validate([
-            'asset_id' => 'required|exists:assets,id',
-            'jenis_kerja' => 'required|string',
-            'kos_rm' => 'required|numeric',
-            'tarikh' => 'required|date',
-            'status' => 'required|in:Siap,Dalam Proses',
-            'resit' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-        ]);
+{
+    $request->validate([
+        'asset_id' => 'required|exists:assets,id',
+        'jenis_kerja' => 'required|string',
+        'kos_rm' => 'required|numeric',
+        'tarikh' => 'required|date',
+        'status' => 'required|in:Siap,Dalam Proses',
+        'resit' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+    ]);
 
-        $path = $request->hasFile('resit') ? $request->file('resit')->store('receipts', 'public') : null;
+    // Simpan fail resit jika ada
+    $path = $request->hasFile('resit') ? $request->file('resit')->store('receipts', 'public') : null;
 
-        AssetMaintenance::create($request->only('asset_id', 'jenis_kerja', 'kos_rm', 'tarikh', 'status') + [
-            'resit_path' => $path,
-            'created_by' => auth()->id()
-        ]);
+    // 1. Simpan rekod baru ke dalam pembolehubah $record
+    $record = AssetMaintenance::create($request->only('asset_id', 'jenis_kerja', 'kos_rm', 'tarikh', 'status') + [
+        'resit_path' => $path,
+        'created_by' => auth()->id(),
+        'updated_by' => auth()->id(), // Set juga updated_by semasa create pertama kali
+    ]);
 
-        $record->update($request->only('jenis_kerja', 'kos_rm', 'tarikh', 'status') + [
-        'updated_by' => auth()->id(), // Simpan ID pengedit terakhir
-        ]);
+    // 2. Padam bahagian $record->update(...) yang lama itu 
+    // kerana data sudah disimpan semasa AssetMaintenance::create di atas.
 
-        return back();
-    }
+    return back()->with('message', 'Rekod penyelenggaraan berjaya ditambah!');
+}
 
     public function registerAsset(Request $request)
     {

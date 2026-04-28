@@ -57,7 +57,7 @@ const user = usePage().props.auth.user;
                                 </NavLink>
                                 <NavLink v-else :href="route('budget_requests.index')" :active="route().current('budget_requests.index')" 
                                          class="text-white hover:text-blue-400 font-medium transition duration-150">
-                                    <i class="fas fa-hand-holding-usd mr-1"></i> My Requests
+                                    <i class="fas fa-hand-holding-usd mr-1"></i> My Budget Requests
                                 </NavLink>
 
                                 <NavLink :href="route('reports.index')" :active="route().current('reports.*')" 

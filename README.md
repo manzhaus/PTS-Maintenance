@@ -81,9 +81,9 @@ php artisan serve
 
 ## 📝 Assumptions & Considerations
 
-- **Contextual Filtering:** Supervisors cannot view data from other PTS locations.
-- **File Storage:** Uses Laravel local disk for MVP; scalable to AWS S3.
-- **Scalability:** Designed with modular structure for future expansion.
+- Contextual Filtering: Supervisors cannot view data from other PTS locations.
+- File Storage: Uses Laravel local disk for MVP; scalable to AWS S3.
+- Scalability: Designed with modular structure for future expansion.
 
 ---
 
@@ -91,7 +91,7 @@ php artisan serve
 
 - Automated Excel export feature  
 - Real-time notification system for budget approvals  
-- Advanced analytics dashboard  
+- Advanced analytics dashboard
 
 ---
 
@@ -102,6 +102,5 @@ Before submitting or sharing:
 - Ensure database is seeded:  
   ```bash
   php artisan migrate --seed
-
   Verify demo credentials are working
   Double-check Railway deployment is live

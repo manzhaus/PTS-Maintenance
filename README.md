@@ -4,18 +4,6 @@ A functional MVP ERP module built for the **Pusat Timbang Sawit (PTS)** maintena
 
 ---
 
-## 🚀 Live Demo & Credentials
-**URL:** `[https://pts-maintenance-production.up.railway.app/]`
-
-| Role | Email | Password |
-| :--- | :--- | :--- |
-| **HQ Admin** | `admin@pts.com` | `password` |
-| **Supervisor 1** | `sv_sa@pts.com` | `password` |
-| **Supervisor 2** | `sv_klang@pts.com` | `password` |
-| **Supervisor 3** | `sv_subang@pts.com` | `password` |
-
----
-
 ## 🛠️ Tech Stack
 - **Backend:** Laravel 11 (PHP 8.2+)
 - **Frontend:** Vue.js 3 via Inertia.js (Composition API)
